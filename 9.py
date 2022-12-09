@@ -17,7 +17,7 @@ commands = map_input(lines)
 def is_touching(head_pos, tail_pos):
     x_h, y_h = head_pos
     x_t, y_t = tail_pos
-    return x_h == x_t and y_h == y_t or abs(x_h - x_t) <= 1 and abs(y_h - y_t) <= 1
+    return abs(x_h - x_t) <= 1 and abs(y_h - y_t) <= 1
 
 def position_diff(head_pos, tail_pos):
     x_diff = head_pos[0] - tail_pos[0]
