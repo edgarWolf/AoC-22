@@ -86,28 +86,42 @@ def part1(start_node: Node, target_node: Node):
     
     return counter
 
-def part2(grid, start_node: Node, target_node: Node):
-    inputs = [start_node]
-    for row in grid:
-        for n in row:
-            if n.val == 0 and n != start_node:
-                inputs.append(n)
-                
-    results = []
-    for inp in inputs:
-        # Reset state of the graph.
-        # Otherwise, all changes from previous run would remain for next run.
-        for row in grid:
-            for n in row:
-                n.visited = False
-                n.pred = None
+
+def part2(target_node: Node):
+    queue = [target_node]
+    target_node.visited = True
+    found_node = []
+    while True:
+        curr = queue.pop(0)
+        children = [c for c in curr.children if not c.visited and curr.val - c.val <= 1]
+
+        for child in children:
+            child.pred = curr
+            child.visited = True
+            queue.append(child)
+
+        found_node = [c for c in children if c.val == 0]
+        if found_node:
+            found_node = found_node[0]
+            break
         
-        results.append(part1(inp, target_node))
-
-    return min(results)
-
-
+    counter = 1
+    pred = found_node.pred
+    while pred.pred:
+        pred = pred.pred
+        counter += 1
+    
+    return counter
+    
+                
 grid, start_node, target_node = map_input(lines)
 
 print("Part 1: ", part1(start_node, target_node))
-print("Part 2: ", part2(grid, start_node, target_node))
+
+# Reset state of graph.
+for row in grid:
+        for n in row:
+            n.visited = False
+            n.pred = None
+
+print("Part 2: ", part2(target_node))
